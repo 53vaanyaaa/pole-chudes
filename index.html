@@ -766,10 +766,7 @@ function hostOnMsg(p){
   pushState(true);renderMp();return;
  }
  if(!m)return;
- if(p.t==='team'){
-  var tm=p.team;if(tm===0||tm===1||tm===2){m.team=tm;}
-  pushState(true);renderMp();return;
- }
+ if(p.t==='team')return; // команду игрок сам менять не может
  if(m.team!==S.cur||S.modal)return; // действовать может только команда, чей сейчас ход
  if(p.t==='letter')pickLetter(String(p.ch||'').slice(0,1));
  else if(p.t==='guess')guessWord(String(p.text||'').slice(0,40));
@@ -856,7 +853,7 @@ function playerMode(room){
   $('pTitle').textContent=st.title;
   var tb=$('pTeams');tb.innerHTML='';
   st.players.forEach(function(pl,i){var b=document.createElement('button');b.className=(i===team?'me':'');
-   b.textContent=pl.name+' ('+st.teams[i]+')';b.addEventListener('click',function(){send({t:'team',team:i})});tb.appendChild(b)});
+   b.textContent=pl.name+' ('+st.teams[i]+')';b.disabled=true;b.style.pointerEvents='none';if(i!==team)b.style.opacity='.5';tb.appendChild(b)});
   var tn=$('pTurn');
   if(st.phase==='done')tn.textContent='Тур завершён. Ждём ведущего';
   else tn.textContent=my?'⭐ ХОДИТ ВАША КОМАНДА!':'Ходит: '+st.players[st.cur].name;
